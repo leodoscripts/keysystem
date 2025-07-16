@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Leodo & Z9 Key Generator</title>
+  <style>
+    body {
+      background: #0f0f0f;
+      color: white;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+      padding: 20px;
+    }
+    .key-box {
+      font-size: 20px;
+      background: #1a1a1a;
+      border: 2px dashed #3b82f6;
+      padding: 15px 25px;
+      border-radius: 8px;
+      margin-top: 20px;
+      word-break: break-all;
+    }
+    .error {
+      color: red;
+      font-size: 18px;
+    }
+    a {
+      color: #3b82f6;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="main-content">
+    <h1>🔑 Leodo & Z9 Key Generator</h1>
+    <p>Copy this key and paste it into the Leodo UI in Roblox.</p>
+    <div class="key-box" id="key">Generating...</div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/js-sha256@0.9.0/build/sha256.min.js"></script>
+  <script>
+    // ❌ Referrer check — must come from Work.ink
+    if (!document.referrer.includes("workink.net")) {
+      document.body.innerHTML = `
+        <h1 class="error">🚫 Access Denied</h1>
+        <p>You must access this page through the official Work.ink link.</p>
+        <p><a href="https://workink.net/21K9/d7uid419">Go to Work.ink</a></p>
+      `;
+      throw new Error("Blocked: Invalid referrer.");
+    }
+
+    // 🔍 Get UID from ?uid=123456
+    const params = new URLSearchParams(window.location.search);
+    const uid = params.get("uid");
+
+    const keyBox = document.getElementById("key");
+
+    if (!uid || isNaN(uid)) {
+      keyBox.innerHTML = `<span class="error">❌ Invalid or missing user ID in link.</span>`;
+    } else {
+      const block = Math.floor(Date.now() / 1000 / 43200);
+      const raw = `${uid}-${block}-Secret123`;
+      const key = sha256(raw);
+      keyBox.textContent = key;
+    }
+  </script>
+</body>
+</html>
