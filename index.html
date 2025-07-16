@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Leodo & Z9 Key Generator</title>
+  <style>
+    body {
+      background: #0f0f0f;
+      color: white;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    input, button {
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: none;
+      margin: 10px;
+    }
+    input {
+      width: 250px;
+    }
+    button {
+      background: #3b82f6;
+      color: white;
+      cursor: pointer;
+    }
+    .output {
+      margin-top: 20px;
+      font-size: 18px;
+      word-break: break-word;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🔑 Leodo & Z9 Key Generator</h1>
+  <p>Enter your Roblox UserId to get your current 12-hour key.</p>
+  <input type="number" id="userid" placeholder="Your UserId">
+  <button onclick="generateKey()">Generate Key</button>
+
+  <div class="output" id="output"></div>
+
+  <script>
+    async function sha256(text) {
+      const encoder = new TextEncoder();
+      const data = encoder.encode(text);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    async function generateKey() {
+      const userId = document.getElementById("userid").value.trim();
+      const block = Math.floor(Date.now() / 1000 / 43200); // 12h block
+      const base = `${userId}-${block}-Secret123`;
+      const hash = await sha256(base);
+
+      document.getElementById("output").innerText = `✅ Your Key:\n${hash}`;
+    }
+  </script>
+</body>
+</html>
